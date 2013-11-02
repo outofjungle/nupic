@@ -14,6 +14,9 @@ include_recipe 'python'
 
 template '/home/vagrant/.bashrc' do
   source 'bashrc.erb'
+  owner 'vagrant'
+  group 'vagrant'
+  mode 00644
   variables({
      :home_dir => '/home/vagrant',
      :nupic_repo => '/tmp/nupic-master'
@@ -120,15 +123,18 @@ end
 remote_file '/tmp/nupic.tar.gz' do 
   source 'https://github.com/numenta/nupic/archive/master.tar.gz'
   checksum '0c10e00cb2a8b3c86050c6c04013f3096f6c4892c32700cfa0bfc96629e812d1'
+  mode 00666
 end
 
 execute 'untar nupic' do
   command 'tar -xzf /tmp/nupic.tar.gz -C /tmp'
+  user 'vagrant'
   not_if { ::File.exists?('/tmp/nupic-master/README.md') }
 end
 
 execute 'build nupic' do
   command '/tmp/nupic-master/build.sh'
+  user 'vagrant'
   environment ({
     'HOME' => '/home/vagrant',
     'NTA' => '/home/vagrant/nta/eng',
