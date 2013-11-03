@@ -26,6 +26,7 @@ package 'libpng12-dev'
 package 'libtool'
 package 'automake'
 package 'build-essential'
+package 'git'
 
 python_pacakges = {
   'numpy' => '1.8.0',
@@ -64,7 +65,7 @@ git '/tmp/nupic' do
 end
 
 execute 'build nupic' do
-  command '/tmp/nupic/cleanbuild.sh'
+  command '/tmp/nupic/build.sh'
   user 'vagrant'
   environment ({
     'HOME' => '/home/vagrant',
