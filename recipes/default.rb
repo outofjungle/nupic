@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: nupic
+# Cookbook Name:: nupic-cookbook
 # Recipe:: default
 #
 # Copyright (C) 2013 YOUR_NAME
@@ -57,7 +57,8 @@ python_pacakges.each do | package_name, package_version |
 end
 
 git '/tmp/nupic' do
-  repository 'https://github.com/numenta/nupic.git'
+  repository node['nupic']['git']['url']
+  revision node['nupic']['git']['branch']
   action :sync
   user node['nupic']['user']['username']
   group node['nupic']['user']['group']
