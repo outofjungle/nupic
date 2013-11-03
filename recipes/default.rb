@@ -7,8 +7,6 @@
 # All rights reserved - Do Not Redistribute
 #
 
-#package 'freetype-devel'
-
 include_recipe 'apt'
 include_recipe 'python'
 
@@ -29,111 +27,44 @@ package 'libtool'
 package 'automake'
 package 'build-essential'
 
-python_pip 'numpy' do
-  version '1.7.1'
-  action :install
+python_pacakges = {
+  'numpy' => '1.8.0',
+  'matplotlib' => '1.1.0',
+  'asteval' => '0.9.1',
+  'mock' => '1.0.1',
+  'ordereddict' => '1.1',
+  'PIL' => '1.1.7',
+  'psutil' => '1.0.1',
+  'pylint' => '0.28.0',
+  'pytest' => '2.4.2',
+  'pytest-cov' => '1.6',
+  'pytest-xdist' => '1.8',
+  'python-dateutil' => '2.1',
+  'PyYAML' => '3.10',
+  'unittest2' => '0.5.1',
+  'validictory' => '0.9.1',
+  'PyMySQL' => '0.5',
+  'DBUtils' => '1.1',
+  'tweepy' => '2.1'
+}
+
+python_pacakges.each do | package_name, package_version |
+  python_pip package_name do
+    version package_version
+    action :install
+  end
 end
 
-python_pip 'matplotlib' do
-  version '1.1.0'
-  action :install
-end
-
-python_pip 'asteval' do
-  version '0.9.1'
-  action :install
-end
-
-
-python_pip 'mock' do
-  version '1.0.1'
-  action :install
-end
-
-python_pip 'ordereddict' do
-  version '1.1'
-  action :install
-end
-
-python_pip 'PIL' do
-  version '1.1.7'
-  action :install
-end
-
-python_pip 'psutil' do
-  version '1.0.1'
-  action :install
-end
-
-python_pip 'pylint' do
-  version '0.28.0'
-  action :install
-end
-
-python_pip 'pytest' do
-  version '2.4.2'
-  action :install
-end
-
-python_pip 'pytest-cov' do
-  version '1.6'
-  action :install
-end
-
-python_pip 'pytest-xdist' do
-  version '1.8'
-  action :install
-end
-
-python_pip 'python-dateutil' do
-  version '2.1'
-  action :install
-end
-
-python_pip 'PyYAML' do
-  version '3.10'
-  action :install
-end
-
-python_pip 'unittest2' do
-  version '0.5.1'
-  action :install
-end
-
-python_pip 'validictory' do
-  version '0.9.1'
-  action :install
-end
-
-python_pip 'PyMySQL' do
-  version '0.5'
-  action :install
-end
-
-python_pip 'DBUtils' do
-  version '1.1'
-  action :install
-end
-
-python_pip 'tweepy' do
-  version '2.1'
-  action :install
-end
-
-remote_file '/tmp/nupic.tar.gz' do 
-  source 'https://github.com/numenta/nupic/archive/master.tar.gz'
-  checksum '0c10e00cb2a8b3c86050c6c04013f3096f6c4892c32700cfa0bfc96629e812d1'
-  mode 00666
-end
-
-execute 'untar nupic' do
-  command 'tar -xzf /tmp/nupic.tar.gz -C /tmp'
+git '/tmp/nupic' do
+  repository 'https://github.com/numenta/nupic.git'
+  action :sync
   user 'vagrant'
-  not_if { ::File.exists?('/tmp/nupic-master/README.md') }
+  group 'vagrant'
+  notifies :run, 'execute[build nupic]'
 end
 
 execute 'build nupic' do
-  command '/tmp/nupic-master/build.sh'
+  command '/tmp/nupic/cleanbuild.sh'
   user 'vagrant'
   environment ({
     'HOME' => '/home/vagrant',
@@ -142,4 +73,5 @@ execute 'build nupic' do
     'BUILDDIR' => '/tmp/ntabuild',
     'MK_JOBS' => '3'
   })
+  action :nothing
 end
