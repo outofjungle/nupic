@@ -12,12 +12,12 @@ include_recipe 'python'
 
 template '/home/vagrant/.bashrc' do
   source 'bashrc.erb'
-  owner 'vagrant'
-  group 'vagrant'
+  owner node['nupic']['user']
+  group node['nupic']['group']
   mode 00644
   variables({
      :home_dir => '/home/vagrant',
-     :nupic_repo => '/tmp/nupic-master'
+     :nupic_repo => '/tmp/nupic'
   })
 end
 
@@ -59,18 +59,19 @@ end
 git '/tmp/nupic' do
   repository 'https://github.com/numenta/nupic.git'
   action :sync
-  user 'vagrant'
-  group 'vagrant'
+  user node['nupic']['user']
+  group node['nupic']['group']
   notifies :run, 'execute[build nupic]'
 end
 
 execute 'build nupic' do
   command '/tmp/nupic/build.sh'
-  user 'vagrant'
+  user node['nupic']['user']
+  group node['nupic']['group']
   environment ({
     'HOME' => '/home/vagrant',
     'NTA' => '/home/vagrant/nta/eng',
-    'NUPIC' => '/tmp/nupic-master',
+    'NUPIC' => '/tmp/nupic',
     'BUILDDIR' => '/tmp/ntabuild',
     'MK_JOBS' => '3'
   })
