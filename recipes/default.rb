@@ -65,7 +65,7 @@ git '/tmp/nupic' do
 end
 
 execute 'build nupic' do
-  command '/tmp/nupic/build.sh'
+  command '/tmp/nupic/cleanbuild.sh'
   user node['nupic']['user']
   group node['nupic']['group']
   environment ({
