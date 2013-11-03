@@ -10,13 +10,13 @@
 include_recipe 'apt'
 include_recipe 'python'
 
-template '/home/vagrant/.bashrc' do
+template "#{node['nupic']['user']['homedir']}/.bashrc" do
   source 'bashrc.erb'
-  owner node['nupic']['user']
-  group node['nupic']['group']
+  owner node['nupic']['user']['username']
+  group node['nupic']['user']['group']
   mode 00644
   variables({
-     :home_dir => '/home/vagrant',
+     :home_dir => "#{node['nupic']['user']['homedir']}",
      :nupic_repo => '/tmp/nupic'
   })
 end
@@ -59,18 +59,18 @@ end
 git '/tmp/nupic' do
   repository 'https://github.com/numenta/nupic.git'
   action :sync
-  user node['nupic']['user']
-  group node['nupic']['group']
+  user node['nupic']['user']['username']
+  group node['nupic']['user']['group']
   notifies :run, 'execute[build nupic]'
 end
 
 execute 'build nupic' do
   command '/tmp/nupic/cleanbuild.sh'
-  user node['nupic']['user']
-  group node['nupic']['group']
+  user node['nupic']['user']['username']
+  group node['nupic']['user']['group']
   environment ({
-    'HOME' => '/home/vagrant',
-    'NTA' => '/home/vagrant/nta/eng',
+    'HOME' => "#{node['nupic']['user']['homedir']}",
+    'NTA' => "#{node['nupic']['user']['homedir']}/nta/eng",
     'NUPIC' => '/tmp/nupic',
     'BUILDDIR' => '/tmp/ntabuild',
     'MK_JOBS' => '3'
