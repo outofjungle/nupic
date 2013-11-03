@@ -64,6 +64,6 @@ default['nupic']['user']['homedir'] = '/home/vagrant'
 
 # Author
 
-Venkat Venkataraju (venkat.venkataraju at yahoo dot com)
+Venkat Venkataraju (venkat.venkataraju@yahoo.com)
 
 
