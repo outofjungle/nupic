@@ -9,6 +9,6 @@ Vagrant.configure('2') do |config|
   config.berkshelf.enabled = true
 
   config.vm.provision :chef_solo do |chef|
-    chef.add_recipe('nupic-cookbook::default')
+    chef.add_recipe('nupic::default')
   end
 end
