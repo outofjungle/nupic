@@ -9,7 +9,8 @@ platforms:
     box: opscode-ubuntu-12.04
     box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box
   customize:
-    memory: 2048
+    memory: 4096
+    cpus: 2
 suites:
 - name: default
   run_list: ["recipe[nupic]"]

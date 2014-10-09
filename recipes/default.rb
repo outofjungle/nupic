@@ -33,22 +33,19 @@ template "#{node['nupic']['user']['homedir']}/.bashrc" do
   })
 end
 
-package 'libfreetype6-dev'
-package 'libpng12-dev'
-package 'libtool'
-package 'automake'
-package 'build-essential'
-package 'git'
+packages = %w(git python-dev python-pip automake libtool libssl-dev g++ cmake mysql-server)
+
+packages.each do | pkg |
+  package pkg
+end
 
 python_pacakges = {
-  'numpy' => '1.8.0',
-  'matplotlib' => '1.1.0',
   'asteval' => '0.9.1',
   'mock' => '1.0.1',
   'ordereddict' => '1.1',
-  # 'PIL' => '1.1.7',
+  'pillow' => '2.3.0',
   'psutil' => '1.0.1',
-  'pylint' => '0.28.0',
+  'pylint' => '1.1.0',
   'pytest' => '2.4.2',
   'pytest-cov' => '1.6',
   'pytest-xdist' => '1.8',
@@ -56,9 +53,12 @@ python_pacakges = {
   'PyYAML' => '3.10',
   'unittest2' => '0.5.1',
   'validictory' => '0.9.1',
-  'PyMySQL' => '0.5',
+  'PyMySQL' => '0.6.2',
   'DBUtils' => '1.1',
-  'tweepy' => '2.1'
+  'numpy' => '1.7.1',
+  'tweepy' => '2.1',
+  'pyproj' => '1.9.3',
+  'prettytable' => '0.7.2'
 }
 
 python_pacakges.each do | package_name, package_version |
@@ -74,11 +74,11 @@ git '/tmp/nupic' do
   action :sync
   user node['nupic']['user']['username']
   group node['nupic']['user']['group']
-  notifies :run, 'execute[build nupic]'
+  # notifies :run, 'execute[build nupic]'
 end
 
 execute 'build nupic' do
-  command '/tmp/nupic/cleanbuild.sh'
+  command 'cd /tmp/nupic && python setup.py install'
   user node['nupic']['user']['username']
   group node['nupic']['user']['group']
   environment ({
@@ -88,5 +88,11 @@ execute 'build nupic' do
     'BUILDDIR' => '/tmp/ntabuild',
     'MK_JOBS' => '3'
   })
-  action :nothing
+  # action :nothing
 end
+
+# export HOME="/home/vagrant"
+# export NTA="/home/vagrant/nta/eng"
+# export NUPIC="/tmp/nupic"
+# export BUILDDIR="/tmp/ntabuild"
+# export MK_JOBS="3"
