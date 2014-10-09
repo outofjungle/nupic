@@ -65,6 +65,7 @@ python_pacakges.each do | package_name, package_version |
   python_pip package_name do
     version package_version
     action :install
+    options '--allow-all-external --allow-unverified PIL --allow-unverified psutil'
   end
 end
 
@@ -74,7 +75,6 @@ git '/tmp/nupic' do
   action :sync
   user node['nupic']['user']['username']
   group node['nupic']['user']['group']
-  # notifies :run, 'execute[build nupic]'
 end
 
 execute 'build nupic' do
@@ -88,7 +88,6 @@ execute 'build nupic' do
     'BUILDDIR' => '/tmp/ntabuild',
     'MK_JOBS' => '3'
   })
-  # action :nothing
 end
 
 # export HOME="/home/vagrant"
